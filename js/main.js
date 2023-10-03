@@ -19,7 +19,7 @@ function mostrarPokemon(poke) {
     if (pokeId.length === 1) {
         poke.id = '00' + pokeId;
     } else if (pokeId.length === 2) {
-        pokeId = '0' + pokeId;
+        poke.id = '0' + pokeId;
     }
 
     const div = document.createElement('div');
