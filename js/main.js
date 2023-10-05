@@ -52,7 +52,27 @@ function mostrarPokemon(poke) {
 
 botonesHeader.forEach((boton) =>
     boton.addEventListener('click', (event) => {
-        const botonId = event.currentTarget.id;
+        let tipoFiltrado = event.currentTarget.id;
+
+        if (event.currentTarget.classList.contains('active')) {
+            event.currentTarget.classList.remove('active');
+            tipoFiltrado = 'ver-todos';
+        }
+
+        if (tipoFiltrado !== 'ver-todos') {
+            event.currentTarget.classList.add('active');
+        } else {
+            botonesHeader.forEach((btn) => {
+                btn.classList.remove('active');
+            });
+        }
+        const elementosArray = document.querySelectorAll('.active');
+        const elementosFiltro = Array.from(elementosArray);
+
+        const filtros = elementosFiltro.map((filtro) => {
+            return filtro.id;
+        });
+        console.log(filtros);
 
         listaPokemon.innerHTML = '';
 
@@ -60,11 +80,17 @@ botonesHeader.forEach((boton) =>
             fetch(URL + i)
                 .then((response) => response.json())
                 .then((data) => {
-                    if (botonId === 'ver-todos') {
+                    if (tipoFiltrado === 'ver-todos') {
                         mostrarPokemon(data);
                     } else {
                         const tipos = data.types.map((type) => type.type.name);
-                        if (tipos.some((tipo) => tipo.includes(botonId))) {
+                        // if (tipos.every((tipo) => filtros.includes(tipo))) {
+                        //     mostrarPokemon(data);
+                        // }
+                        const contieneTodosLosTipos = filtros.every((filtro) =>
+                            tipos.includes(filtro)
+                        );
+                        if (contieneTodosLosTipos) {
                             mostrarPokemon(data);
                         }
                     }
